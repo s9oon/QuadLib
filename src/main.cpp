@@ -2,12 +2,12 @@
 #include <iostream>
 
 int main() {
-	if (!QuadLib::Init()) {
-		std::cerr << "Failed to init\n";
+	QuadLib::initWindow("my window", 1280, 720);
+
+	while (!QuadLib::windowShouldClose()) {
+		QuadLib::beginFrame(QuadLib::RGBA(255, 255, 0, 255));
+		QuadLib::endFrame();
 	}
 
-	std::cout << "Init passed well\n";
-	system("pause");	
-
-	QuadLib::shutDown();
+	QuadLib::Shutdown();
 }

@@ -50,6 +50,7 @@ endif()
 
 add_library(QuadLib
     src/api/quadlib.cpp
+    src/core/core.cpp
 )
 
 target_include_directories(QuadLib PUBLIC
