@@ -4,11 +4,20 @@
 #include <bgfx/bgfx.h>
 #include <vector>
 
-enum PresetShaders {
-	BASIC,
+struct Vec2 {
+	float x, y;
 };
 
-std::vector<PresetShaders> preset_shaders;
+struct Transform {
+	Vec2 position;
+	float rotation;
+	Transform(Vec2 position, float rotation) : position(position), rotation(rotation) {};
+};
+
+struct Mesh2D {
+	std::vector<Vec2> vertices;
+	std::vector<uint16_t> indices;
+};
 
 namespace Core {
 	void updateOrtho(float* ortho, int width, int height);

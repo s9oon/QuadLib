@@ -57,7 +57,7 @@ add_library(QuadLib
     src/api/quadlib.cpp
     src/core/core.cpp
     src/core/shader.cpp
-    src/core/mesh.cpp
+    
 )
 
 
