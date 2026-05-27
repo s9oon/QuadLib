@@ -17,7 +17,9 @@ enum class Platform {
 };
 
 struct Shader {
-	const char* path;
+	const char* sourcePath;
+	const char* compiledPath;
+
 	ShaderType type;
 	bgfx::RendererType::Enum backend = bgfx::RendererType::Enum::Count;
 	Platform platform = Platform::Auto;

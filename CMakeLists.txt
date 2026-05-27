@@ -31,6 +31,9 @@ endif()
 
 # bgfx
 
+# Put all executables in build/bin
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 set(BGFX_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 option(QUADLIB_BGFX_TOOLS "Enable BGFX shader tools" ON)
 
@@ -48,13 +51,19 @@ if(NOT TARGET bgfx)
 
 endif()
 
-
 # Your library
 
 add_library(QuadLib
     src/api/quadlib.cpp
     src/core/core.cpp
     src/core/shader.cpp
+)
+
+
+target_compile_definitions(QuadLib PUBLIC
+    QUADLIB_PROJECT_ROOT="${CMAKE_SOURCE_DIR}"
+    QUADLIB_SHADERC="$<TARGET_FILE:shaderc>"
+    QUADLIB_BGFX_SRC_DIR="${bgfx_SOURCE_DIR}/bgfx/src"
 )
 
 if(QUADLIB_BGFX_TOOLS)
