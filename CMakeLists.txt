@@ -32,7 +32,9 @@ endif()
 # bgfx
 
 set(BGFX_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(BGFX_BUILD_TOOLS OFF CACHE BOOL "" FORCE)
+option(QUADLIB_BGFX_TOOLS "Enable BGFX shader tools" ON)
+
+set(BGFX_BUILD_TOOLS ${QUADLIB_BGFX_TOOLS} CACHE BOOL "" FORCE)
 
 if(NOT TARGET bgfx)
 
@@ -51,7 +53,12 @@ endif()
 add_library(QuadLib
     src/api/quadlib.cpp
     src/core/core.cpp
+    src/core/shader.cpp
 )
+
+if(QUADLIB_BGFX_TOOLS)
+    target_compile_definitions(QuadLib PUBLIC QUADLIB_BGFX_TOOLS)
+endif()
 
 target_include_directories(QuadLib PUBLIC
     include

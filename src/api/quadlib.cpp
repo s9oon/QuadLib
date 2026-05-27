@@ -3,9 +3,10 @@
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 
+#include <SDL3/SDL.h>
+
 #include <iostream>
 
-#include <SDL3/SDL.h>
 #include <bx/math.h>
 
 #include "../core/core.h"
@@ -18,6 +19,13 @@ namespace QuadLib {
     static int window_height;
     bool m_running = true;
 
+#ifdef QUADLIB_BGFX_TOOLS
+#include "../core/shader.h"
+    bool compileShader(Shader& shader) {
+        return Core::compileShader(shader);
+    }
+#endif
+
     // Convert color to bgfx
     uint32_t RGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
         return (uint32_t(r) << 24) |
@@ -28,36 +36,26 @@ namespace QuadLib {
 
     // initalise quadlib + basic window
 	bool initWindow(const char* title, int width, int height) {
-        window_width = width;
-        window_height = height;
-
         if (!SDL_Init(SDL_INIT_VIDEO)) {
-            std::cout << SDL_GetError() << "\n";
+            SDL_Log("SDL init failed: %s", SDL_GetError());
             return false;
         }
 
         window = SDL_CreateWindow(
             title,
-            width, height,
+            width,
+            height,
             SDL_WINDOW_RESIZABLE
         );
 
         if (!window) {
-            std::cout << SDL_GetError() << "\n";
+            SDL_Log("Window creation failed: %s", SDL_GetError());
             return false;
         }
 
-        // SDL native window handle
-        SDL_PropertiesID props = SDL_GetWindowProperties(window);
+        bgfx::PlatformData pd = Core::getPlatformData(window);
 
-        // not cross platform
-        void* nativeWindow = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr);
-
-        bgfx::PlatformData pd{};
-        pd.nwh = nativeWindow;
-
-        // initalise bgfx
-        bgfx::Init init;
+        bgfx::Init init{};
         init.type = bgfx::RendererType::Count;
         init.resolution.width = width;
         init.resolution.height = height;
@@ -69,7 +67,12 @@ namespace QuadLib {
             return false;
         }
 
-        Core::updateOrtho(ortho, window_width, window_height);
+        window_width = width;
+        window_height = height;
+
+        Core::updateOrtho(ortho, width, height);
+
+        bgfx::setDebug(BGFX_DEBUG_TEXT);
 
         return true;
 	}
@@ -92,7 +95,6 @@ namespace QuadLib {
     }
 
     void beginFrame(uint32_t color) {
-
         getWindowSize(window_width, window_height);
 
         bgfx::setViewRect(VIEW_MAIN, 0, 0, uint16_t(window_width), uint16_t(window_height));

@@ -1,10 +1,12 @@
 #pragma once
 
 #include <cstdint>
-
-struct Color { uint8_t r, g, b, a; };
+#include "../core/shader.h"
 
 namespace QuadLib {
+#ifdef QUADLIB_BGFX_TOOLS
+	bool compileShader(Shader& shader);
+#endif
 
 	// convert color to bgfx
 	uint32_t RGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
@@ -20,9 +22,6 @@ namespace QuadLib {
 
 	// end frame
 	void endFrame();
-
-	// draw sprite
-	void drawSprite();
 
 	// initalise quadlib + basic window
 	bool initWindow(const char* title = "QuadLib", int width = 1280, int height = 720);
