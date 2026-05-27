@@ -1,12 +1,13 @@
 #include "shader.h"
 
 #include <bgfx/bgfx.h>
-
 #include <cstdlib>
 #include <string>
 #include <iostream>
 #include <filesystem>
 #include <sstream>
+#include <bx/file.h>
+#include <bx/error.h>
 
 namespace Core {
 
@@ -85,14 +86,11 @@ namespace Core {
             << " --profile " << getProfileArg(shader.backend)
             << " -i \"" << QUADLIB_BGFX_SRC_DIR << "\"";
 
-#ifdef QUADLIB_BGFX_TOOLS
         std::cout << "[shaderc] " << cmd.str() << std::endl;
-#endif
 
         int result = std::system(cmd.str().c_str());
 
-        if (result != 0)
-        {
+        if (result != 0) {
             std::cerr << "[shaderc] compilation failed: "
                 << shader.sourcePath << std::endl;
             return false;
@@ -101,4 +99,36 @@ namespace Core {
         return true;
     }
 
-} // namespace Core
+    bgfx::ShaderHandle loadShader(const char* path) {
+        std::filesystem::path fullPath = std::filesystem::absolute(path);
+
+        bx::FileReader reader;
+        bx::Error err;
+
+        if (!bx::open(&reader, path, &err)) {
+            std::cerr << "[QuadLib] Failed to open shader file: "
+                << fullPath << std::endl;
+
+            return BGFX_INVALID_HANDLE;
+        }
+
+        uint32_t size = (uint32_t)bx::getSize(&reader);
+
+        const bgfx::Memory* mem = bgfx::alloc(size + 1);
+
+        bx::read(&reader, mem->data, size, &err);
+
+        bx::close(&reader);
+
+        mem->data[size] = '\0';
+
+        return bgfx::createShader(mem);
+    }
+
+    bgfx::ProgramHandle getProgram(const char* vspath, const char* fspath) {
+        bgfx::ShaderHandle vsh = loadShader(vspath);
+        bgfx::ShaderHandle fsh = loadShader(fspath);
+
+        return bgfx::createProgram(vsh, fsh, true);
+    }
+}

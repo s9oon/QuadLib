@@ -27,4 +27,5 @@ struct Shader {
 
 namespace Core {
 	bool compileShader(Shader& shader);
+	bgfx::ShaderHandle loadShader(const char* path);
 }

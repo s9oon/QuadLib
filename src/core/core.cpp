@@ -17,8 +17,7 @@ namespace Core {
         );
     }
 
-    bgfx::PlatformData getPlatformData(SDL_Window* window)
-    {
+    bgfx::PlatformData getPlatformData(SDL_Window* window) {
         bgfx::PlatformData pd{};
 
         SDL_PropertiesID props = SDL_GetWindowProperties(window);

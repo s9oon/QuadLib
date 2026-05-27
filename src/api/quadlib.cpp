@@ -10,6 +10,7 @@
 #include <bx/math.h>
 
 #include "../core/core.h"
+#include "../core/shader.h"
 
 namespace QuadLib {
     static constexpr uint16_t VIEW_MAIN = 0;
@@ -17,13 +18,21 @@ namespace QuadLib {
     static float ortho[16];
     static int window_width;
     static int window_height;
-    bool m_running = true;
+    bool running = true;
 
 #ifdef QUADLIB_BGFX_TOOLS
     bool compileShader(Shader& shader) {
         return Core::compileShader(shader);
     }
+
+    void drawElement(const Mesh2D& mesh, const char* pngpath, bgfx::ProgramHandle& program) {
+        //TODO
+    }
 #endif
+
+    void drawElement(const Mesh2D& mesh, const char* pngpath, PresetShaders shaders) {
+        //TODO
+    }
 
     // Convert color to bgfx
     uint32_t RGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
@@ -82,11 +91,11 @@ namespace QuadLib {
 
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_EVENT_QUIT) {
-                m_running = false;
+                running = false;
             }
         }
 
-        return !m_running;
+        return !running;
     }
 
     void getWindowSize(int& width, int& height) {
