@@ -48,6 +48,7 @@ if(NOT TARGET bgfx)
 
 endif()
 
+
 # Your library
 
 add_library(QuadLib

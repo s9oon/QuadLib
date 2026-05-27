@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <filesystem>
 
 namespace Core {
     static Platform detectPlatform() {
@@ -44,13 +45,13 @@ namespace Core {
     static const char* getProfileArg(bgfx::RendererType::Enum renderer) {
         switch (renderer) {
         case bgfx::RendererType::Direct3D11:
-            return "s_5_0";
+            return "440";
 
         case bgfx::RendererType::Direct3D12:
             return "s_5_1";
 
         case bgfx::RendererType::OpenGL:
-            return "120";
+            return "440";
 
         case bgfx::RendererType::OpenGLES:
             return "300_es";
@@ -74,16 +75,19 @@ namespace Core {
             shader.backend = bgfx::getRendererType();
         }
 
+        std::filesystem::current_path("C:/QuadLib");
+
         std::string output =
             std::string(shader.path) + ".bin";
 
         std::string cmd =
-            "shaderc "
-            "-f " + std::string(shader.path) +
-            " -o " + output +
-            " --type " + getShaderTypeArg(shader.type) +
-            " -p " + getProfileArg(shader.backend) +
-            " --platform " + getPlatformArg(shader.platform);
+            std::string("C:/QuadLib/build/_deps/bgfx-build/cmake/bgfx/Debug/shaderc.exe ") + " " +
+            "-f \"" + std::string(shader.path) + "\" " +
+            "-o \"" + output + "\" " +
+            "--type " + getShaderTypeArg(shader.type) + " " +
+            "-p " + getProfileArg(shader.backend) + " " +
+            "--platform " + getPlatformArg(shader.platform) + " " +
+            "-i \"C:/QuadLib/build/_deps/bgfx-src/bgfx/src\"";
 
         std::cout << cmd << std::endl;
 
