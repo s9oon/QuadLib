@@ -20,7 +20,6 @@ namespace QuadLib {
     bool m_running = true;
 
 #ifdef QUADLIB_BGFX_TOOLS
-#include "../core/shader.h"
     bool compileShader(Shader& shader) {
         return Core::compileShader(shader);
     }
