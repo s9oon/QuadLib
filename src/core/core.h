@@ -14,8 +14,8 @@ namespace Core {
 	extern bgfx::VertexLayout g_VertexLayout;
 
 	void initVertexLayout();
-
 	GPUMesh2D loadMesh(const Mesh2D& mesh);
+
 	void updateOrtho(float* ortho, int width, int height);
 	bgfx::PlatformData getPlatformData(SDL_Window* window);
 }
