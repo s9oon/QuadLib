@@ -5,6 +5,9 @@
 #include <bgfx/platform.h>
 #include <SDL3/SDL.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../../assets/stb_image.h"
+
 namespace Core {
     bgfx::VertexLayout g_VertexLayout;
 
@@ -14,6 +17,12 @@ namespace Core {
             .add(bgfx::Attrib::Position, 2, bgfx::AttribType::Float)
             .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
             .end();
+    }
+
+    // simple init function
+    void init() {
+        Core::initVertexLayout();
+        bgfx::UniformHandle s_texColor = bgfx::createUniform("s_texColor", bgfx::UniformType::Sampler);
     }
 
     GPUMesh2D loadMesh(const Mesh2D& mesh) {
@@ -39,6 +48,46 @@ namespace Core {
         gpuMesh.ibh = bgfx::createIndexBuffer(indexMemory);
 
         return gpuMesh;
+    }
+
+    bgfx::TextureHandle loadSTBTexture(const char* path) {
+        int width, height, channels;
+
+        unsigned char* data = stbi_load(
+            path,
+            &width,
+            &height,
+            &channels,
+            4 // force RGBA
+        );
+
+        if (!data)
+        {
+            return BGFX_INVALID_HANDLE;
+        }
+
+        const bgfx::Memory* mem = bgfx::copy(
+            data,
+            width * height * 4
+        );
+
+        bgfx::TextureHandle texture = bgfx::createTexture2D(
+            (uint16_t)width,
+            (uint16_t)height,
+            false, // no mipmaps
+            1,     // single layer
+            bgfx::TextureFormat::RGBA8,
+            BGFX_TEXTURE_NONE,
+            mem
+        );
+
+        stbi_image_free(data);
+
+        return texture;
+    }
+
+    bgfx::TextureHandle loadCompiledTexture(const char* path) {
+        // TODO
     }
 
     void updateOrtho(float* ortho, int width, int height) {

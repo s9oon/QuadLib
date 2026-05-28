@@ -25,33 +25,11 @@ namespace QuadLib {
         return Core::compileShader(shader);
     }
 
-    void drawElement(const Mesh2D& mesh, const char* pngpath, bgfx::ProgramHandle& program) {
-
-        // Upload mesh to GPU
-        GPUMesh2D gpuMesh = Core::loadMesh(mesh);
-
-        // Bind geometry
-        bgfx::setVertexBuffer(0, gpuMesh.vbh);
-        bgfx::setIndexBuffer(gpuMesh.ibh);
-
-        // Render state
-        bgfx::setState(
-            BGFX_STATE_WRITE_RGB |
-            BGFX_STATE_WRITE_A |
-            BGFX_STATE_BLEND_ALPHA
-        );
-
-        // Submit draw call
-        bgfx::submit(0, program);
-
-        // Cleanup (temporary approach)
-        bgfx::destroy(gpuMesh.vbh);
-        bgfx::destroy(gpuMesh.ibh);
+    void drawElement(Element& element, bgfx::ProgramHandle& program) {
     }
 #endif
 
-    void drawElement(const Mesh2D& mesh, const char* pngpath, PresetShaders shaders) {
-        //TODO
+    void drawElement(Element& element, PresetShaders shaders) {
     }
 
     // Convert color to bgfx
@@ -95,7 +73,7 @@ namespace QuadLib {
             return false;
         }
 
-        Core::initVertexLayout();
+        Core::init();
 
         window_width = width;
         window_height = height;

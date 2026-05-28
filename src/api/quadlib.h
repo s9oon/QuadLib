@@ -16,11 +16,14 @@ namespace QuadLib {
 	bool compileShader(Shader& shader);
 
 	// draw element with a custom shader
-	void drawElement(const Mesh2D& mesh, const char* pngpath, bgfx::ProgramHandle& program);
+	void drawElement(Element& element, bgfx::ProgramHandle& program);
 #endif
 
+	// initalize is required
+	bool init();
+
 	// draw element with pre made shaders
-	void drawElement(const Mesh2D& mesh, const char* pngpath, PresetShaders shaders);
+	void drawElement(Element& element, PresetShaders shaders);
 
 	// convert color to bgfx
 	uint32_t RGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
