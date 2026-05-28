@@ -1,45 +1,25 @@
 #pragma once
 
 #include <cstdint>
+#include "../common/types.h"
 
 #ifdef QUADLIB_BGFX_TOOLS
 #include "../core/shader.h"
 #endif
-#include <vector>
 
-enum PresetShaders {
-	BASIC,
-};
-
-struct Vec2 {
-	float x, y;
-};
-
-struct Vertex2D {
-	Vec2 vertex;
-	Vec2 uv;
-};
-
-struct Transform {
-	Vec2 position;
-	float rotation;
-
-	Transform(Vec2 position, float rotation) : position(position), rotation(rotation) {};
-};
-
-struct Mesh2D {
-	std::vector<Vertex2D> vertices;
-	std::vector<uint16_t> indices;
-
-	Mesh2D(std::vector<Vertex2D> vertices, std::vector<uint16_t> indices) : vertices(vertices), indices(indices) {};
-};
+#ifdef QUADLIB_CORE
+#include "../core/core.h"
+#endif
 
 namespace QuadLib {
 #ifdef QUADLIB_BGFX_TOOLS
 	bool compileShader(Shader& shader);
+
+	// draw element with a custom shader
 	void drawElement(const Mesh2D& mesh, const char* pngpath, bgfx::ProgramHandle& program);
 #endif
 
+	// draw element with pre made shaders
 	void drawElement(const Mesh2D& mesh, const char* pngpath, PresetShaders shaders);
 
 	// convert color to bgfx

@@ -6,6 +6,41 @@
 #include <SDL3/SDL.h>
 
 namespace Core {
+    bgfx::VertexLayout g_VertexLayout;
+
+    void initVertexLayout() {
+        g_VertexLayout
+            .begin()
+            .add(bgfx::Attrib::Position, 2, bgfx::AttribType::Float)
+            .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+            .end();
+    }
+
+    GPUMesh2D loadMesh(const Mesh2D& mesh) {
+        GPUMesh2D gpuMesh{};
+
+        // Create vertex buffer
+        const bgfx::Memory* vertexMemory = bgfx::copy(
+            mesh.vertices.data(),
+            static_cast<uint32_t>(mesh.vertices.size() * sizeof(Vertex2D))
+        );
+
+        gpuMesh.vbh = bgfx::createVertexBuffer(
+            vertexMemory,
+            g_VertexLayout
+        );
+
+        // Create index buffer
+        const bgfx::Memory* indexMemory = bgfx::copy(
+            mesh.indices.data(),
+            static_cast<uint32_t>(mesh.indices.size() * sizeof(uint16_t))
+        );
+
+        gpuMesh.ibh = bgfx::createIndexBuffer(indexMemory);
+
+        return gpuMesh;
+    }
+
     void updateOrtho(float* ortho, int width, int height) {
         bx::mtxOrtho(
             ortho,

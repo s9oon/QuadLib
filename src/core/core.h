@@ -3,23 +3,19 @@
 #include <SDL3/SDL.h>
 #include <bgfx/bgfx.h>
 #include <vector>
+#include "../common/types.h"
 
-struct Vec2 {
-	float x, y;
-};
-
-struct Transform {
-	Vec2 position;
-	float rotation;
-	Transform(Vec2 position, float rotation) : position(position), rotation(rotation) {};
-};
-
-struct Mesh2D {
-	std::vector<Vec2> vertices;
-	std::vector<uint16_t> indices;
+struct GPUMesh2D {
+	bgfx::VertexBufferHandle vbh;
+	bgfx::IndexBufferHandle ibh;
 };
 
 namespace Core {
+	extern bgfx::VertexLayout g_VertexLayout;
+
+	void initVertexLayout();
+
+	GPUMesh2D loadMesh(const Mesh2D& mesh);
 	void updateOrtho(float* ortho, int width, int height);
 	bgfx::PlatformData getPlatformData(SDL_Window* window);
 }

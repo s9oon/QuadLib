@@ -84,7 +84,8 @@ namespace Core {
             << " --type " << getShaderTypeArg(shader.type)
             << " --platform " << getPlatformArg(shader.platform)
             << " --profile " << getProfileArg(shader.backend)
-            << " -i \"" << QUADLIB_BGFX_SRC_DIR << "\"";
+            << " -i \"" << QUADLIB_BGFX_SRC_DIR << "\""
+            << " --varyingdef \"" << VaryingDefPath << "\"";
 
         std::cout << "[shaderc] " << cmd.str() << std::endl;
 

@@ -26,6 +26,8 @@ struct Shader {
 };
 
 namespace Core {
+	inline constexpr const char* VaryingDefPath = QUADLIB_PROJECT_ROOT "/assets/shaders/varying.def.sc";
 	bool compileShader(Shader& shader);
 	bgfx::ShaderHandle loadShader(const char* path);
+	bgfx::ProgramHandle getProgram(const char* vspath, const char* fspath);
 }

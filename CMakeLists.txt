@@ -36,6 +36,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(BGFX_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 option(QUADLIB_BGFX_TOOLS "Enable BGFX shader tools" ON)
+option(QUADLIB_CORE "Access all core functions throught api" ON)
 
 set(BGFX_BUILD_TOOLS ${QUADLIB_BGFX_TOOLS} CACHE BOOL "" FORCE)
 
@@ -69,6 +70,10 @@ target_compile_definitions(QuadLib PUBLIC
 
 if(QUADLIB_BGFX_TOOLS)
     target_compile_definitions(QuadLib PUBLIC QUADLIB_BGFX_TOOLS)
+endif()
+
+if(QUADLIB_CORE)
+    target_compile_definitions(QuadLib PUBLIC QUADLIB_CORE)
 endif()
 
 target_include_directories(QuadLib PUBLIC

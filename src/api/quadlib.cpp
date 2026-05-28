@@ -26,7 +26,27 @@ namespace QuadLib {
     }
 
     void drawElement(const Mesh2D& mesh, const char* pngpath, bgfx::ProgramHandle& program) {
-        //TODO
+
+        // Upload mesh to GPU
+        GPUMesh2D gpuMesh = Core::loadMesh(mesh);
+
+        // Bind geometry
+        bgfx::setVertexBuffer(0, gpuMesh.vbh);
+        bgfx::setIndexBuffer(gpuMesh.ibh);
+
+        // Render state
+        bgfx::setState(
+            BGFX_STATE_WRITE_RGB |
+            BGFX_STATE_WRITE_A |
+            BGFX_STATE_BLEND_ALPHA
+        );
+
+        // Submit draw call
+        bgfx::submit(0, program);
+
+        // Cleanup (temporary approach)
+        bgfx::destroy(gpuMesh.vbh);
+        bgfx::destroy(gpuMesh.ibh);
     }
 #endif
 
@@ -74,6 +94,8 @@ namespace QuadLib {
             std::cout << "BGFX init failed\n";
             return false;
         }
+
+        Core::initVertexLayout();
 
         window_width = width;
         window_height = height;
