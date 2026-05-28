@@ -19,9 +19,6 @@ namespace QuadLib {
 	void drawElement(Element& element, bgfx::ProgramHandle& program);
 #endif
 
-	// initalize is required
-	bool init();
-
 	// draw element with pre made shaders
 	void drawElement(Element& element, PresetShaders shaders);
 
