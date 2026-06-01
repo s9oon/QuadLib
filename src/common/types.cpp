@@ -29,5 +29,5 @@ ElementUI::ElementUI(Mesh2D* mesh, Transform transform, const char* texturepath)
 }
 
 Batch::Batch(std::vector<ElementUI*> elements) {
-    // needs to 
+    // TODO
 }
