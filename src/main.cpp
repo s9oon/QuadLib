@@ -17,11 +17,10 @@ int main() {
 	QuadLib::compileShader(fsshader);
 
 	std::vector<Vertex2D> vertices = {
-		// Vertex pos     UV pos
-		{-0.5f,  0.5f, 0.0f, 0.0f},
-		{ 0.5f,  0.5f, 1.0f, 0.0f},
-		{ 0.5f, -0.5f, 1.0f, 1.0f},
-		{-0.5f, -0.5f, 0.0f, 1.0f},
+	{ {-0.5f,  0.5f}, {0.0f, 0.0f} },
+	{ { 0.5f,  0.5f}, {1.0f, 0.0f} },
+	{ { 0.5f, -0.5f}, {1.0f, 1.0f} },
+	{ {-0.5f, -0.5f}, {0.0f, 1.0f} },
 	};
 
 	std::vector<uint16_t> indices = {
@@ -31,22 +30,19 @@ int main() {
 
 	Mesh2D quad(vertices, indices);
 
-	Transform origin = { {0.0f, 0.0f},  // position
-						 0.0f,          // rotation
-						 {1.0f, 1.0f}   // scale
-	};
+	Transform origin = { {640.0f, 360.0f}, 0.0f, {200.0f, 200.0f} };
 
 	Element moon = { &quad, origin, QUADLIB_PROJECT_ROOT "/assets/basicmoon.png" };
 
-	bgfx::ProgramHandle basic = Core::getProgram(QUADLIB_PROJECT_ROOT "/assets/shaders/compiled/vs_basic.bin", QUADLIB_PROJECT_ROOT "/assets/shaders/compiled/fs_basic.bin");
+	bgfx::ProgramHandle basic = Core::getProgram(
+		QUADLIB_PROJECT_ROOT "/assets/shaders/compiled/vs_basic.bin", QUADLIB_PROJECT_ROOT "/assets/shaders/compiled/fs_basic.bin"
+	);
 
 	while (!QuadLib::windowShouldClose()) {
 		QuadLib::beginFrame(QuadLib::RGBA(255, 255, 0, 255));
 		QuadLib::drawElement(moon, basic);
 		QuadLib::endFrame();
 	}
-
-	Core::unloadElement(moon);
 
 	QuadLib::Shutdown();
 }

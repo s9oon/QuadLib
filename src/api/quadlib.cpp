@@ -20,33 +20,21 @@ namespace QuadLib {
         return Core::compileShader(shader);
     }
 
-    void QuadLib::drawElement(Element& element, bgfx::ProgramHandle& program)
-    {
-        if (!element.loaded)
-            return;
+    void QuadLib::drawElement(Element& element, bgfx::ProgramHandle& program) {
+
+        Core::loadElement(element);
 
         // ---- Transform (2D manual SRT) ----
         float mtx[16];
 
-        bx::mtxIdentity(mtx);
+        float scale[16], rot[16], trans[16], tmp[16];
 
-        // scale
-        bx::mtxScale(mtx,
-            element.transform.scale.x,
-            element.transform.scale.y,
-            1.0f
-        );
+        bx::mtxScale(scale, element.transform.scale.x, element.transform.scale.y, 1.0f);
+        bx::mtxRotateZ(rot, element.transform.rotation);
+        bx::mtxTranslate(trans, element.transform.position.x, element.transform.position.y, 0.0f);
 
-        // rotation (Z axis for 2D)
-        bx::mtxRotateZ(mtx, element.transform.rotation);
-
-        // translation
-        bx::mtxTranslate(mtx,
-            element.transform.position.x,
-            element.transform.position.y,
-            0.0f
-        );
-
+        bx::mtxMul(tmp, scale, rot);    // scale * rotation
+        bx::mtxMul(mtx, tmp, trans);   // (scale * rotation) * translation
         bgfx::setTransform(mtx);
 
         // ---- Mesh ----
@@ -60,7 +48,11 @@ namespace QuadLib {
         }
 
         // ---- Render state (VERY important) ----
-        bgfx::setState(BGFX_STATE_DEFAULT);
+        bgfx::setState(0
+            | BGFX_STATE_WRITE_RGB
+            | BGFX_STATE_WRITE_A
+            | BGFX_STATE_BLEND_ALPHA
+        );
 
         // ---- Submit ----
         bgfx::submit(Core::VIEW_MAIN, program);

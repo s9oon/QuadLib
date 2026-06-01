@@ -44,4 +44,6 @@ public:
 
 	Element(Mesh2D* mesh, Transform transform, const char* texturepath) :
 		mesh(mesh), transform(transform), texturepath(texturepath) {};
+
+	~Element();
 };
