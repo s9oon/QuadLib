@@ -22,19 +22,12 @@ namespace QuadLib {
 
     void QuadLib::drawElement(Element& element, bgfx::ProgramHandle& program) {
         Core::loadElement(element);
-
-        float identity[16];
-        bx::mtxIdentity(identity);
-        bgfx::setTransform(identity);
-
         // ---- Mesh ----
         bgfx::setVertexBuffer(0, element.gpuMesh->vbh);
         bgfx::setIndexBuffer(element.gpuMesh->ibh);
-
         // ---- Texture ----
         if (element.texture && bgfx::isValid(element.texture->handle))
             bgfx::setTexture(0, Core::s_texColor, element.texture->handle);
-
         // ---- Render state ----
         bgfx::setState(0
             | BGFX_STATE_WRITE_RGB
@@ -54,8 +47,6 @@ namespace QuadLib {
         bx::mtxMul(tmp, scale, rot);
         bx::mtxMul(mtx, tmp, trans);
         bgfx::setTransform(mtx);
-
-        // call base version for the rest
         drawElement(static_cast<Element&>(element), program);
     }
 #endif

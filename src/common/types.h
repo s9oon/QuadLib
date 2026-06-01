@@ -37,6 +37,7 @@ public:
     const char* texturepath;
 
     bool loaded = false;
+    bool ownsMesh = false;
 
     GPUMesh2D* gpuMesh = nullptr;
     Texture* texture = nullptr;
@@ -59,14 +60,18 @@ public:
 
 class ElementUI : public Element {
 public:
-    ElementUI(Mesh2D* mesh, const char* texturepath) :
-        Element(mesh, texturepath) {
-    };
+    Transform transform;
+
+    ElementUI(Mesh2D* mesh, Transform transform, const char* texturepath);
 };
 
+// new idea element ui contains a transform but the constructor prebakes them???
 class Batch {
-    std::vector<ElementUI*> elements;
-    Texture texture;
+public:
+    ElementUI finalelement;
 
-    void add(ElementUI& element);
+    Batch(std::vector<ElementUI*> elements);
+
+private:
+    std::vector<ElementUI*> elements;
 };
