@@ -16,7 +16,8 @@ namespace Core {
 	void shutdown();
 
 	void initVertexLayout();
-
+	void loadElement(Element& element);
+	void unloadElement(Element& element);
 	void updateOrtho(float* ortho, int width, int height);
 	bgfx::PlatformData getPlatformData(SDL_Window* window);
 }

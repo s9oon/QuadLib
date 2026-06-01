@@ -4,6 +4,8 @@
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include <SDL3/SDL.h>
+#include "texture.h"
+#include "mesh.h"
 
 namespace Core {
     bgfx::VertexLayout g_VertexLayout;
@@ -27,6 +29,28 @@ namespace Core {
     void init() {
         initVertexLayout();
         s_texColor = bgfx::createUniform("s_texColor", bgfx::UniformType::Sampler);
+    }
+
+    void loadElement(Element& element) {
+        if (element.loaded) return;
+        if (!element.mesh) return;
+
+        element.gpuMesh = new GPUMesh2D(Core::loadMesh(*element.mesh));
+
+        if (element.texturepath)
+            element.texture = new Texture(Core::loadTexture(element.texturepath));
+
+        element.loaded = true;
+    }
+
+    void unloadElement(Element& element) {
+        delete element.gpuMesh;
+        delete element.texture;
+
+        element.gpuMesh = nullptr;
+        element.texture = nullptr;
+
+        element.loaded = false;
     }
 
     void updateOrtho(float* ortho, int width, int height) {

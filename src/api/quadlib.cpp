@@ -20,26 +20,49 @@ namespace QuadLib {
         return Core::compileShader(shader);
     }
 
-    void drawElement(Element& element, bgfx::ProgramHandle& program) {
-        // 1. Convert mesh to GPU mesh (BAD to do every frame, but works for now)
-        GPUMesh2D gpuMesh = Core::loadMesh(*element.mesh);
+    void QuadLib::drawElement(Element& element, bgfx::ProgramHandle& program)
+    {
+        if (!element.loaded)
+            return;
 
-        bgfx::setVertexBuffer(0, gpuMesh.vbh);
-        bgfx::setIndexBuffer(gpuMesh.ibh);
+        // ---- Transform (2D manual SRT) ----
+        float mtx[16];
 
-        // 2. Load texture (also BAD to do every frame, but matches your structure)
-        bgfx::TextureHandle tex = Core::loadTexture(element.texturepath);
+        bx::mtxIdentity(mtx);
 
-        if (bgfx::isValid(tex))
+        // scale
+        bx::mtxScale(mtx,
+            element.transform.scale.x,
+            element.transform.scale.y,
+            1.0f
+        );
+
+        // rotation (Z axis for 2D)
+        bx::mtxRotateZ(mtx, element.transform.rotation);
+
+        // translation
+        bx::mtxTranslate(mtx,
+            element.transform.position.x,
+            element.transform.position.y,
+            0.0f
+        );
+
+        bgfx::setTransform(mtx);
+
+        // ---- Mesh ----
+        bgfx::setVertexBuffer(0, element.gpuMesh->vbh);
+        bgfx::setIndexBuffer(element.gpuMesh->ibh);
+
+        // ---- Texture ----
+        if (element.texture && bgfx::isValid(element.texture->handle))
         {
-            bgfx::setTexture(
-                0,
-                Core::s_texColor,
-                tex
-            );
+            bgfx::setTexture(0, Core::s_texColor, element.texture->handle);
         }
 
-        // 3. Submit draw call
+        // ---- Render state (VERY important) ----
+        bgfx::setState(BGFX_STATE_DEFAULT);
+
+        // ---- Submit ----
         bgfx::submit(Core::VIEW_MAIN, program);
     }
 #endif

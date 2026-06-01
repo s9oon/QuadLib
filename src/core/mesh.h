@@ -6,7 +6,6 @@
 struct GPUMesh2D {
 	bgfx::VertexBufferHandle vbh;
 	bgfx::IndexBufferHandle ibh;
-	~GPUMesh2D();
 };
 
 namespace Core {

@@ -2,6 +2,8 @@
 #include <iostream>
 
 int main() {
+
+	std::cout << "hello words\n";
 	QuadLib::initWindow("my window", 1280, 720);
 
 	Shader vsshader { 
@@ -40,9 +42,11 @@ int main() {
 
 	while (!QuadLib::windowShouldClose()) {
 		QuadLib::beginFrame(QuadLib::RGBA(255, 255, 0, 255));
-		//QuadLib::drawElement(moon, basic);
+		QuadLib::drawElement(moon, basic);
 		QuadLib::endFrame();
 	}
+
+	Core::unloadElement(moon);
 
 	QuadLib::Shutdown();
 }

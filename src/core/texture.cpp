@@ -7,12 +7,13 @@
 
 namespace Core {
 	bool compileTexture() {
-		// TODO
+		// TODO forget this
 
         return true;
 	}
 
-    bgfx::TextureHandle loadTexture(const char* path) {
+    Texture Core::loadTexture(const char* path)
+    {
         // Check if the file exists first.
         if (!std::filesystem::exists(path))
         {
@@ -20,20 +21,21 @@ namespace Core {
                 << std::filesystem::absolute(path).string()
                 << std::endl;
 
-            return BGFX_INVALID_HANDLE;
+            return {};
         }
 
         ImageData img = loadSTB_Image(path);
 
         // Check if STB failed to load the image.
-        if (!img.data) {
+        if (!img.data)
+        {
             std::cerr << "[TextureLoader] Failed to load texture: "
                 << std::filesystem::absolute(path).string()
                 << "\nReason: "
                 << (stbi_failure_reason() ? stbi_failure_reason() : "Unknown error")
                 << std::endl;
 
-            return BGFX_INVALID_HANDLE;
+            return {};
         }
 
         const bgfx::Memory* mem = bgfx::copy(
@@ -41,7 +43,9 @@ namespace Core {
             img.width * img.height * 4
         );
 
-        bgfx::TextureHandle tex = bgfx::createTexture2D(
+        Texture texture;
+
+        texture.handle = bgfx::createTexture2D(
             static_cast<uint16_t>(img.width),
             static_cast<uint16_t>(img.height),
             false,
@@ -53,7 +57,16 @@ namespace Core {
 
         stbi_image_free(img.data);
 
-        return tex;
+        if (!bgfx::isValid(texture.handle))
+        {
+            std::cerr << "[TextureLoader] Failed to create BGFX texture: "
+                << std::filesystem::absolute(path).string()
+                << std::endl;
+
+            return {};
+        }
+
+        return texture;
     }
 
     ImageData loadSTB_Image(const char* path) {

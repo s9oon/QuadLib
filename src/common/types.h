@@ -28,12 +28,20 @@ struct Mesh2D {
 		vertices(vertices), indices(indices) {};
 };
 
+struct GPUMesh2D;
+struct Texture;
+
 class Element {
 public:
 	Mesh2D* mesh;
 	Transform transform;
-	const char* texturepath; 
+	const char* texturepath;
 
-	Element(Mesh2D* mesh, const Transform& transform, const char* texturepath) :
+	GPUMesh2D* gpuMesh = nullptr;
+	Texture* texture = nullptr;
+
+	bool loaded = false;
+
+	Element(Mesh2D* mesh, Transform transform, const char* texturepath) :
 		mesh(mesh), transform(transform), texturepath(texturepath) {};
 };
