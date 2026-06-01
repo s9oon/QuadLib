@@ -3,21 +3,25 @@
 #include <vector>
 
 struct Vec2 {
-	float x, y;
+    float x, y;
+    constexpr Vec2(float x, float y) : x(x), y(y) {};
+    constexpr Vec2() : x(0.0f), y(0.0f) {};
 };
 
 struct Vertex2D {
-	Vec2 vertex;
-	Vec2 uv;
+    Vec2 vertex;
+    Vec2 uv;
 };
 
 struct Transform {
-	Vec2 position;
-	float rotation;
-	Vec2 scale;
+    Vec2 position;
+    float rotation;
+    Vec2 scale;
 
-	Transform(Vec2 position, float rotation, Vec2 scale) : 
-		position(position), rotation(rotation), scale(scale) {};
+    constexpr Transform() : position(0.0f, 0.0f), rotation(0.0f), scale(1.0f, 1.0f) {};
+    constexpr Transform(Vec2 position, float rotation, Vec2 scale) :
+        position(position), rotation(rotation), scale(scale) {
+    };
 };
 
 struct Mesh2D { 
@@ -62,6 +66,7 @@ class ElementUI : public Element {
 public:
     Transform transform;
 
+    ElementUI() : Element(nullptr, nullptr) {};
     ElementUI(Mesh2D* mesh, Transform transform, const char* texturepath);
 };
 

@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include "../common/types.h"
+#include "../common/primitives.h"
 
 #ifdef QUADLIB_BGFX_TOOLS
 #include "../core/shader.h"
@@ -48,6 +49,9 @@ namespace QuadLib {
 
 	// get window size
 	void getWindowSize(int& width, int& height);
+
+	// get centered transform for current window size
+	Transform getCenter(float scale = 200.0f);
 
 	// check if window should close
 	bool windowShouldClose();

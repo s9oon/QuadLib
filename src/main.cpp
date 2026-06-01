@@ -5,6 +5,8 @@ int main() {
 
 	QuadLib::initWindow("my window", 1280, 720);
 
+	/*
+	* uncomment for compiling new shaders
 	Shader fsshader { 
 		QUADLIB_PROJECT_ROOT "/assets/shaders/fs_basic.sc", QUADLIB_PROJECT_ROOT "/assets/shaders/compiled/fs_basic.bin", ShaderType::Fragment
 	};
@@ -14,27 +16,14 @@ int main() {
 
 	QuadLib::compileShader(fsshader);
 	QuadLib::compileShader(vsshader);
+	*/
 
-	std::vector<Vertex2D> vertices = {
-	{ {-0.5f,  0.5f}, {0.0f, 0.0f} },
-	{ { 0.5f,  0.5f}, {1.0f, 0.0f} },
-	{ { 0.5f, -0.5f}, {1.0f, 1.0f} },
-	{ {-0.5f, -0.5f}, {0.0f, 1.0f} },
-	};
+	Mesh2D quad = QuadLib::getQuad();
 
-	std::vector<uint16_t> indices = {
-		0, 1, 2,   // first triangle
-		2, 3, 0    // second triangle
-	};
-
-	Mesh2D quad(vertices, indices);
-
-	Transform origin = { {640.0f, 360.0f}, 0.0f, {200.0f, 200.0f} };
-
-	ElementWorld moon = { &quad, origin, QUADLIB_PROJECT_ROOT "/assets/basicmoon.png" };
+	ElementWorld moon = { &quad, QuadLib::getCenter(200.0f), QUADLIB_ROOT "/assets/basicmoon.png"};
 
 	bgfx::ProgramHandle basic = Core::getProgram(
-		QUADLIB_PROJECT_ROOT "/assets/shaders/compiled/vs_basic.bin", QUADLIB_PROJECT_ROOT "/assets/shaders/compiled/fs_basic.bin"
+		QUADLIB_ROOT "/assets/shaders/compiled/vs_basic.bin", QUADLIB_ROOT "/assets/shaders/compiled/fs_basic.bin"
 	);
 
 	while (!QuadLib::windowShouldClose()) {
@@ -42,6 +31,5 @@ int main() {
 		QuadLib::drawElement(moon, basic);
 		QuadLib::endFrame();
 	}
-
 	QuadLib::Shutdown();
 }

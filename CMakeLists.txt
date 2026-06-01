@@ -60,11 +60,13 @@ add_library(QuadLib
     src/core/shader.cpp
     src/core/mesh.cpp
     src/core/texture.cpp
+    src/common/types.cpp
 )
 
 
 target_compile_definitions(QuadLib PUBLIC
-    QUADLIB_PROJECT_ROOT="${CMAKE_SOURCE_DIR}"
+    QUADLIB_ROOT="${CMAKE_CURRENT_SOURCE_DIR}"      # always QuadLib's folder
+    QUADLIB_PROJECT_ROOT="${CMAKE_SOURCE_DIR}"       # always the end user's project root
     QUADLIB_SHADERC="$<TARGET_FILE:shaderc>"
     QUADLIB_BGFX_SRC_DIR="${bgfx_SOURCE_DIR}/bgfx/src"
 )

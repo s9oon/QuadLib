@@ -16,7 +16,7 @@ enum class Platform {
 };
 
 namespace Core {
-    inline constexpr const char* VaryingDefPath = QUADLIB_PROJECT_ROOT "/assets/shaders/varying.def.sc";
+    inline constexpr const char* VaryingDefPath = QUADLIB_ROOT "/assets/shaders/varying.def.sc";
     bgfx::ShaderHandle loadShader(const char* path);
     bgfx::ProgramHandle getProgram(const char* vspath, const char* fspath);
 }

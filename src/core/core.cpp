@@ -7,10 +7,6 @@
 #include "texture.h"
 #include "mesh.h"
 
-Element::~Element() {
-    if (loaded) Core::unloadElement(*this);
-}
-
 namespace Core {
     bgfx::VertexLayout g_VertexLayout;
     bgfx::UniformHandle s_texColor = BGFX_INVALID_HANDLE;

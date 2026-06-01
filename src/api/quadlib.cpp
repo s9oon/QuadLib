@@ -129,6 +129,16 @@ namespace QuadLib {
         SDL_GetWindowSizeInPixels(Core::window, &width, &height);
     }
 
+    Transform QuadLib::getCenter(float scale) {
+        int width, height;
+        QuadLib::getWindowSize(width, height);
+        return Transform(
+            { width / 2.0f, height / 2.0f },
+            0.0f,
+            { scale, scale }
+        );
+    }
+
     void beginFrame(uint32_t color) {
         getWindowSize(Core::window_width, Core::window_height);
 
