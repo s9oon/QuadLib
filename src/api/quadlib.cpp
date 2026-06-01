@@ -13,11 +13,6 @@
 #include "../core/shader.h"
 
 namespace QuadLib {
-    static constexpr uint16_t VIEW_MAIN = 0;
-    static SDL_Window* window = nullptr;
-    static float ortho[16];
-    static int window_width;
-    static int window_height;
     bool running = true;
 
 #ifdef QUADLIB_BGFX_TOOLS
@@ -47,19 +42,19 @@ namespace QuadLib {
             return false;
         }
 
-        window = SDL_CreateWindow(
+        Core::window = SDL_CreateWindow(
             title,
             width,
             height,
             SDL_WINDOW_RESIZABLE
         );
 
-        if (!window) {
+        if (!Core::window) {
             SDL_Log("Window creation failed: %s", SDL_GetError());
             return false;
         }
 
-        bgfx::PlatformData pd = Core::getPlatformData(window);
+        bgfx::PlatformData pd = Core::getPlatformData(Core::window);
 
         bgfx::Init init{};
         init.type = bgfx::RendererType::Count;
@@ -75,10 +70,10 @@ namespace QuadLib {
 
         Core::init();
 
-        window_width = width;
-        window_height = height;
+        Core::window_width = width;
+        Core::window_height = height;
 
-        Core::updateOrtho(ortho, width, height);
+        Core::updateOrtho(Core::ortho, width, height);
 
         bgfx::setDebug(BGFX_DEBUG_TEXT);
 
@@ -99,18 +94,18 @@ namespace QuadLib {
     }
 
     void getWindowSize(int& width, int& height) {
-        SDL_GetWindowSizeInPixels(window, &width, &height);
+        SDL_GetWindowSizeInPixels(Core::window, &width, &height);
     }
 
     void beginFrame(uint32_t color) {
-        getWindowSize(window_width, window_height);
+        getWindowSize(Core::window_width, Core::window_height);
 
-        bgfx::setViewRect(VIEW_MAIN, 0, 0, uint16_t(window_width), uint16_t(window_height));
+        bgfx::setViewRect(Core::VIEW_MAIN, 0, 0, uint16_t(Core::window_width), uint16_t(Core::window_height));
         clearBackground(color);
 
-        bgfx::setViewTransform(VIEW_MAIN, nullptr, ortho);
+        bgfx::setViewTransform(Core::VIEW_MAIN, nullptr, Core::ortho);
 
-        bgfx::touch(VIEW_MAIN);
+        bgfx::touch(Core::VIEW_MAIN);
     }
 
     void endFrame() {
@@ -120,7 +115,7 @@ namespace QuadLib {
     // clear background
     void clearBackground(uint32_t color) {
         bgfx::setViewClear(
-            VIEW_MAIN,
+            Core::VIEW_MAIN,
             BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
             color,
             1.0f,
@@ -129,8 +124,14 @@ namespace QuadLib {
     }
 
     void Shutdown() {
+        if (bgfx::isValid(Core::s_texColor)) {
+            bgfx::destroy(Core::s_texColor);
+            Core::s_texColor = BGFX_INVALID_HANDLE;
+        }
+
         bgfx::shutdown();
-        SDL_DestroyWindow(window);
+
+        SDL_DestroyWindow(Core::window);
         SDL_Quit();
     }
 }

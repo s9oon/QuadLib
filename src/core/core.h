@@ -5,26 +5,21 @@
 #include <vector>
 #include "../common/types.h"
 
-
-struct GPUMesh2D {
-	bgfx::VertexBufferHandle vbh;
-	bgfx::IndexBufferHandle ibh;
-	~GPUMesh2D();
-};
-
 namespace Core {
+	extern bgfx::UniformHandle s_texColor;
 	extern bgfx::VertexLayout g_VertexLayout;
 
+	extern uint16_t VIEW_MAIN;
+	extern SDL_Window* window;
+	extern float ortho[16];
+	extern int window_width;
+	extern int window_height;
+
 	void init();
+	void shutdown();
 
 	void initVertexLayout();
-	GPUMesh2D loadMesh(const Mesh2D& mesh);
 
-	bgfx::TextureHandle loadSTBTexture(const char* path);
-
-#ifdef QUADLIB_BGFX_TOOLS
-	bgfx::TextureHandle loadCompiledTexture(const char* path);
-#endif
 	void updateOrtho(float* ortho, int width, int height);
 	bgfx::PlatformData getPlatformData(SDL_Window* window);
 }

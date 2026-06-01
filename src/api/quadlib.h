@@ -5,6 +5,8 @@
 
 #ifdef QUADLIB_BGFX_TOOLS
 #include "../core/shader.h"
+#include "../core/mesh.h"
+#include "../core/texture.h"
 #endif
 
 #ifdef QUADLIB_CORE

@@ -24,6 +24,12 @@ GPUMesh2D::~GPUMesh2D() {
 
 namespace Core {
     bgfx::VertexLayout g_VertexLayout;
+    bgfx::UniformHandle s_texColor = BGFX_INVALID_HANDLE;
+
+    SDL_Window* window = nullptr;
+    float ortho[16];
+    int window_width = 0;
+    int window_height = 0;
 
     void initVertexLayout() {
         g_VertexLayout
@@ -35,72 +41,11 @@ namespace Core {
 
     // simple init function
     void init() {
-        Core::initVertexLayout();
-        bgfx::UniformHandle s_texColor = bgfx::createUniform("s_texColor", bgfx::UniformType::Sampler);
+        initVertexLayout();
+        s_texColor = bgfx::createUniform("s_texColor", bgfx::UniformType::Sampler);
     }
 
-    GPUMesh2D loadMesh(const Mesh2D& mesh) {
-        GPUMesh2D gpuMesh{};
-
-        // Create vertex buffer
-        const bgfx::Memory* vertexMemory = bgfx::copy(
-            mesh.vertices.data(),
-            static_cast<uint32_t>(mesh.vertices.size() * sizeof(Vertex2D))
-        );
-
-        gpuMesh.vbh = bgfx::createVertexBuffer(
-            vertexMemory,
-            g_VertexLayout
-        );
-
-        // Create index buffer
-        const bgfx::Memory* indexMemory = bgfx::copy(
-            mesh.indices.data(),
-            static_cast<uint32_t>(mesh.indices.size() * sizeof(uint16_t))
-        );
-
-        gpuMesh.ibh = bgfx::createIndexBuffer(indexMemory);
-
-        return gpuMesh;
-    }
-
-    bgfx::TextureHandle loadSTBTexture(const char* path) {
-        int width, height, channels;
-
-        unsigned char* data = stbi_load(
-            path,
-            &width,
-            &height,
-            &channels,
-            4 // force RGBA
-        );
-
-        if (!data)
-        {
-            return BGFX_INVALID_HANDLE;
-        }
-
-        const bgfx::Memory* mem = bgfx::copy(
-            data,
-            width * height * 4
-        );
-
-        bgfx::TextureHandle texture = bgfx::createTexture2D(
-            (uint16_t)width,
-            (uint16_t)height,
-            false, // no mipmaps
-            1,     // single layer
-            bgfx::TextureFormat::RGBA8,
-            BGFX_TEXTURE_NONE,
-            mem
-        );
-
-        stbi_image_free(data);
-
-        return texture;
-    }
-
-    bgfx::TextureHandle loadCompiledTexture(const char* path) {
+    bgfx::TextureHandle loadTexture(const char* path) {
         // TODO
     }
 
@@ -172,4 +117,15 @@ namespace Core {
         return pd;
     }
 
+    void shutdown() {
+        if (bgfx::isValid(s_texColor)) {
+            bgfx::destroy(s_texColor);
+            s_texColor = BGFX_INVALID_HANDLE;
+        }
+
+        bgfx::shutdown();
+
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+    }
 }
