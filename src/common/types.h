@@ -33,17 +33,40 @@ struct Texture;
 
 class Element {
 public:
-	Mesh2D* mesh;
-	Transform transform;
-	const char* texturepath;
+    Mesh2D* mesh;
+    const char* texturepath;
 
-	GPUMesh2D* gpuMesh = nullptr;
-	Texture* texture = nullptr;
+    bool loaded = false;
 
-	bool loaded = false;
+    GPUMesh2D* gpuMesh = nullptr;
+    Texture* texture = nullptr;
 
-	Element(Mesh2D* mesh, Transform transform, const char* texturepath) :
-		mesh(mesh), transform(transform), texturepath(texturepath) {};
+    Element(Mesh2D* mesh, const char* texturepath) :
+        mesh(mesh), texturepath(texturepath) {
+    };
 
-	~Element();
+    ~Element();
+};
+
+class ElementWorld : public Element {
+public:
+    Transform transform;
+
+    ElementWorld(Mesh2D* mesh, Transform transform, const char* texturepath) :
+        Element(mesh, texturepath), transform(transform) {
+    };
+};
+
+class ElementUI : public Element {
+public:
+    ElementUI(Mesh2D* mesh, const char* texturepath) :
+        Element(mesh, texturepath) {
+    };
+};
+
+class Batch {
+    std::vector<ElementUI*> elements;
+    Texture texture;
+
+    void add(ElementUI& element);
 };

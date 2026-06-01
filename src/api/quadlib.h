@@ -19,10 +19,14 @@ namespace QuadLib {
 
 	// draw element with a custom shader
 	void drawElement(Element& element, bgfx::ProgramHandle& program);
+
+	// draw element with transform and a custom shader
+	void drawElement(ElementWorld& element, bgfx::ProgramHandle& program);
+
 #endif
 
-	// draw element with pre made shaders
-	void drawElement(Element& element);
+	// draw element with trasnform and pre made shaders
+	void drawElement(ElementWorld& element);
 
 	// convert color to bgfx
 	uint32_t RGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);

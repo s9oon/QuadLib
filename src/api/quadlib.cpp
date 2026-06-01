@@ -21,21 +21,11 @@ namespace QuadLib {
     }
 
     void QuadLib::drawElement(Element& element, bgfx::ProgramHandle& program) {
-
         Core::loadElement(element);
 
-        // ---- Transform (2D manual SRT) ----
-        float mtx[16];
-
-        float scale[16], rot[16], trans[16], tmp[16];
-
-        bx::mtxScale(scale, element.transform.scale.x, element.transform.scale.y, 1.0f);
-        bx::mtxRotateZ(rot, element.transform.rotation);
-        bx::mtxTranslate(trans, element.transform.position.x, element.transform.position.y, 0.0f);
-
-        bx::mtxMul(tmp, scale, rot);    // scale * rotation
-        bx::mtxMul(mtx, tmp, trans);   // (scale * rotation) * translation
-        bgfx::setTransform(mtx);
+        float identity[16];
+        bx::mtxIdentity(identity);
+        bgfx::setTransform(identity);
 
         // ---- Mesh ----
         bgfx::setVertexBuffer(0, element.gpuMesh->vbh);
@@ -43,23 +33,38 @@ namespace QuadLib {
 
         // ---- Texture ----
         if (element.texture && bgfx::isValid(element.texture->handle))
-        {
             bgfx::setTexture(0, Core::s_texColor, element.texture->handle);
-        }
 
-        // ---- Render state (VERY important) ----
+        // ---- Render state ----
         bgfx::setState(0
             | BGFX_STATE_WRITE_RGB
             | BGFX_STATE_WRITE_A
             | BGFX_STATE_BLEND_ALPHA
         );
-
-        // ---- Submit ----
         bgfx::submit(Core::VIEW_MAIN, program);
+    }
+
+    void QuadLib::drawElement(ElementWorld& element, bgfx::ProgramHandle& program) {
+        // ---- Transform (2D manual SRT) ----
+        float mtx[16];
+        float scale[16], rot[16], trans[16], tmp[16];
+        bx::mtxScale(scale, element.transform.scale.x, element.transform.scale.y, 1.0f);
+        bx::mtxRotateZ(rot, element.transform.rotation);
+        bx::mtxTranslate(trans, element.transform.position.x, element.transform.position.y, 0.0f);
+        bx::mtxMul(tmp, scale, rot);
+        bx::mtxMul(mtx, tmp, trans);
+        bgfx::setTransform(mtx);
+
+        // call base version for the rest
+        drawElement(static_cast<Element&>(element), program);
     }
 #endif
 
     void drawElement(Element& element) {
+        // TODO
+    }
+
+    void drawElement(ElementWorld& element) {
         // TODO
     }
 

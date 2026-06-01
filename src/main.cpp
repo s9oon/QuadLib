@@ -3,18 +3,17 @@
 
 int main() {
 
-	std::cout << "hello words\n";
 	QuadLib::initWindow("my window", 1280, 720);
 
-	Shader vsshader { 
+	Shader fsshader { 
 		QUADLIB_PROJECT_ROOT "/assets/shaders/fs_basic.sc", QUADLIB_PROJECT_ROOT "/assets/shaders/compiled/fs_basic.bin", ShaderType::Fragment
 	};
-	Shader fsshader  = { 
+	Shader vsshader  = { 
 		QUADLIB_PROJECT_ROOT "/assets/shaders/vs_basic.sc", QUADLIB_PROJECT_ROOT "/assets/shaders/compiled/vs_basic.bin", ShaderType::Vertex
 	};
 
-	QuadLib::compileShader(vsshader);
 	QuadLib::compileShader(fsshader);
+	QuadLib::compileShader(vsshader);
 
 	std::vector<Vertex2D> vertices = {
 	{ {-0.5f,  0.5f}, {0.0f, 0.0f} },
@@ -32,7 +31,7 @@ int main() {
 
 	Transform origin = { {640.0f, 360.0f}, 0.0f, {200.0f, 200.0f} };
 
-	Element moon = { &quad, origin, QUADLIB_PROJECT_ROOT "/assets/basicmoon.png" };
+	ElementWorld moon = { &quad, origin, QUADLIB_PROJECT_ROOT "/assets/basicmoon.png" };
 
 	bgfx::ProgramHandle basic = Core::getProgram(
 		QUADLIB_PROJECT_ROOT "/assets/shaders/compiled/vs_basic.bin", QUADLIB_PROJECT_ROOT "/assets/shaders/compiled/fs_basic.bin"
