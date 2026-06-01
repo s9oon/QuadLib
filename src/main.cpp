@@ -4,13 +4,15 @@
 int main() {
 	QuadLib::initWindow("my window", 1280, 720);
 
-	Shader shader { "C:/QuadLib/assets/shaders/fs_basic.sc", "C:/QuadLib/assets/shaders/compiled/fs_basic.bin", ShaderType::Fragment};
+	Shader vsshader { 
+		QUADLIB_PROJECT_ROOT "/assets/shaders/fs_basic.sc", QUADLIB_PROJECT_ROOT "/assets/shaders/compiled/fs_basic.bin", ShaderType::Fragment
+	};
+	Shader fsshader  = { 
+		QUADLIB_PROJECT_ROOT "/assets/shaders/vs_basic.sc", QUADLIB_PROJECT_ROOT "/assets/shaders/compiled/vs_basic.bin", ShaderType::Vertex
+	};
 
-	QuadLib::compileShader(shader);
-
-	shader  = { "C:/QuadLib/assets/shaders/vs_basic.sc", "C:/QuadLib/assets/shaders/compiled/vs_basic.bin", ShaderType::Vertex };
-
-	QuadLib::compileShader(shader);
+	QuadLib::compileShader(vsshader);
+	QuadLib::compileShader(fsshader);
 
 	std::vector<Vertex2D> vertices = {
 		// Vertex pos     UV pos
@@ -29,7 +31,7 @@ int main() {
 
 	Transform origin = { {0.0f, 0.0f},  // position
 						 0.0f,          // rotation
-						 {1.0f, 1.0f}
+						 {1.0f, 1.0f}   // scale
 	};
 
 	Element moon = { &quad, origin, QUADLIB_PROJECT_ROOT "/assets/basicmoon.png" };
@@ -38,7 +40,7 @@ int main() {
 
 	while (!QuadLib::windowShouldClose()) {
 		QuadLib::beginFrame(QuadLib::RGBA(255, 255, 0, 255));
-		QuadLib::drawElement(moon, basic);
+		//QuadLib::drawElement(moon, basic);
 		QuadLib::endFrame();
 	}
 
