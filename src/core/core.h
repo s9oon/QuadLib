@@ -6,9 +6,6 @@
 #include "../common/types.h"
 
 namespace Core {
-	extern bgfx::UniformHandle s_texColor;
-	extern bgfx::VertexLayout g_VertexLayout;
-
 	extern uint16_t VIEW_MAIN;
 	extern SDL_Window* window;
 	extern float ortho[16];

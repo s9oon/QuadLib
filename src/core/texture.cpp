@@ -1,15 +1,40 @@
 #include "texture.h"
+#include <filesystem>
+#include <iostream>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "../../assets/stb_image.h"
 
 namespace Core {
 	bool compileTexture() {
 		// TODO
+
+        return true;
 	}
 
     bgfx::TextureHandle loadTexture(const char* path) {
+        // Check if the file exists first.
+        if (!std::filesystem::exists(path))
+        {
+            std::cerr << "[TextureLoader] File not found: "
+                << std::filesystem::absolute(path).string()
+                << std::endl;
+
+            return BGFX_INVALID_HANDLE;
+        }
+
         ImageData img = loadSTB_Image(path);
 
-        if (!img.data)
+        // Check if STB failed to load the image.
+        if (!img.data) {
+            std::cerr << "[TextureLoader] Failed to load texture: "
+                << std::filesystem::absolute(path).string()
+                << "\nReason: "
+                << (stbi_failure_reason() ? stbi_failure_reason() : "Unknown error")
+                << std::endl;
+
             return BGFX_INVALID_HANDLE;
+        }
 
         const bgfx::Memory* mem = bgfx::copy(
             img.data,
@@ -17,8 +42,8 @@ namespace Core {
         );
 
         bgfx::TextureHandle tex = bgfx::createTexture2D(
-            (uint16_t)img.width,
-            (uint16_t)img.height,
+            static_cast<uint16_t>(img.width),
+            static_cast<uint16_t>(img.height),
             false,
             1,
             bgfx::TextureFormat::RGBA8,
@@ -31,8 +56,7 @@ namespace Core {
         return tex;
     }
 
-    ImageData loadSTB_Image(const char* path)
-    {
+    ImageData loadSTB_Image(const char* path) {
         ImageData img;
 
         img.data = stbi_load(

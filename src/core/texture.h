@@ -11,6 +11,8 @@ struct ImageData
 };
 
 namespace Core {
+    extern bgfx::UniformHandle s_texColor;
 	bgfx::TextureHandle loadTexture(const char* path);
+    ImageData loadSTB_Image(const char* path);
 	bool compileTexture();
 }

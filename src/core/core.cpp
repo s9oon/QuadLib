@@ -5,27 +5,11 @@
 #include <bgfx/platform.h>
 #include <SDL3/SDL.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "../../assets/stb_image.h"
-
-GPUMesh2D::~GPUMesh2D() {
-    if (bgfx::isValid(vbh))
-    {
-        bgfx::destroy(vbh);
-        vbh = BGFX_INVALID_HANDLE;
-    }
-
-    if (bgfx::isValid(ibh))
-    {
-        bgfx::destroy(ibh);
-        ibh = BGFX_INVALID_HANDLE;
-    }
-}
-
 namespace Core {
     bgfx::VertexLayout g_VertexLayout;
     bgfx::UniformHandle s_texColor = BGFX_INVALID_HANDLE;
 
+    uint16_t VIEW_MAIN = 0;
     SDL_Window* window = nullptr;
     float ortho[16];
     int window_width = 0;
@@ -43,10 +27,6 @@ namespace Core {
     void init() {
         initVertexLayout();
         s_texColor = bgfx::createUniform("s_texColor", bgfx::UniformType::Sampler);
-    }
-
-    bgfx::TextureHandle loadTexture(const char* path) {
-        // TODO
     }
 
     void updateOrtho(float* ortho, int width, int height) {

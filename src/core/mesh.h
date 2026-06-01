@@ -10,5 +10,6 @@ struct GPUMesh2D {
 };
 
 namespace Core {
+	extern bgfx::VertexLayout g_VertexLayout;
 	GPUMesh2D loadMesh(const Mesh2D& mesh);
 }

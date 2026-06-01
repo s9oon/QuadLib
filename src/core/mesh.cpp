@@ -1,5 +1,17 @@
 #include "mesh.h"
 
+GPUMesh2D::~GPUMesh2D() {
+    if (bgfx::isValid(vbh)) {
+        bgfx::destroy(vbh);
+        vbh = BGFX_INVALID_HANDLE;
+    }
+
+    if (bgfx::isValid(ibh)) {
+        bgfx::destroy(ibh);
+        ibh = BGFX_INVALID_HANDLE;
+    }
+}
+
 namespace Core {
     GPUMesh2D loadMesh(const Mesh2D& mesh) {
         GPUMesh2D gpuMesh{};
@@ -24,17 +36,5 @@ namespace Core {
         gpuMesh.ibh = bgfx::createIndexBuffer(indexMemory);
 
         return gpuMesh;
-    }
-
-    GPUMesh2D::~GPUMesh2D() {
-        if (bgfx::isValid(vbh)) {
-            bgfx::destroy(vbh);
-            vbh = BGFX_INVALID_HANDLE;
-        }
-
-        if (bgfx::isValid(ibh)) {
-            bgfx::destroy(ibh);
-            ibh = BGFX_INVALID_HANDLE;
-        }
     }
 }
