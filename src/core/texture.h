@@ -2,11 +2,15 @@
 
 #include <bgfx/bgfx.h>
 
-struct Texture {
-	bgfx::TextureHandle handle = BGFX_INVALID_HANDLE;
+struct ImageData
+{
+    int width = 0;
+    int height = 0;
+    int channels = 0;
+    unsigned char* data = nullptr;
 };
 
 namespace Core {
-	Texture loadTexture(const char* path);
+	bgfx::TextureHandle loadTexture(const char* path);
 	bool compileTexture();
 }

@@ -25,4 +25,16 @@ namespace Core {
 
         return gpuMesh;
     }
+
+    GPUMesh2D::~GPUMesh2D() {
+        if (bgfx::isValid(vbh)) {
+            bgfx::destroy(vbh);
+            vbh = BGFX_INVALID_HANDLE;
+        }
+
+        if (bgfx::isValid(ibh)) {
+            bgfx::destroy(ibh);
+            ibh = BGFX_INVALID_HANDLE;
+        }
+    }
 }

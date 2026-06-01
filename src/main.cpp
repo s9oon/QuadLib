@@ -27,8 +27,18 @@ int main() {
 
 	Mesh2D quad(vertices, indices);
 
+	Transform origin = { {0.0f, 0.0f},  // position
+						 0.0f,          // rotation
+						 {1.0f, 1.0f}
+	};
+
+	Element moon = { &quad, origin, "assets/basicmoon.png" };
+
+	bgfx::ProgramHandle basic = Core::getProgram("assets/shaders/compiled/vs_basic.bin", "assets/shaders/compiled/fs_basic.bin");
+
 	while (!QuadLib::windowShouldClose()) {
 		QuadLib::beginFrame(QuadLib::RGBA(255, 255, 0, 255));
+		QuadLib::drawElement(moon, basic);
 		QuadLib::endFrame();
 	}
 

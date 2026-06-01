@@ -21,10 +21,31 @@ namespace QuadLib {
     }
 
     void drawElement(Element& element, bgfx::ProgramHandle& program) {
+        // 1. Convert mesh to GPU mesh (BAD to do every frame, but works for now)
+        GPUMesh2D gpuMesh = Core::loadMesh(*element.mesh);
+
+        bgfx::setVertexBuffer(0, gpuMesh.vbh);
+        bgfx::setIndexBuffer(gpuMesh.ibh);
+
+        // 2. Load texture (also BAD to do every frame, but matches your structure)
+        bgfx::TextureHandle tex = Core::loadTexture(element.texturepath);
+
+        if (bgfx::isValid(tex))
+        {
+            bgfx::setTexture(
+                0,
+                Core::s_texColor,
+                tex
+            );
+        }
+
+        // 3. Submit draw call
+        bgfx::submit(Core::VIEW_MAIN, program);
     }
 #endif
 
-    void drawElement(Element& element, PresetShaders shaders) {
+    void drawElement(Element& element) {
+        // TODO
     }
 
     // Convert color to bgfx
@@ -124,14 +145,5 @@ namespace QuadLib {
     }
 
     void Shutdown() {
-        if (bgfx::isValid(Core::s_texColor)) {
-            bgfx::destroy(Core::s_texColor);
-            Core::s_texColor = BGFX_INVALID_HANDLE;
-        }
-
-        bgfx::shutdown();
-
-        SDL_DestroyWindow(Core::window);
-        SDL_Quit();
     }
 }
