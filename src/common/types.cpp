@@ -1,39 +1,85 @@
 #include "types.h"
-#include "../core/core.h"
-#include "../core/texture.h"
 #include <bx/math.h>
+#include <string>
+#include "../core/textureatlas.h"
 
+namespace Core {
+    void bakeVertices(Mesh2D& mesh, Transform transform);
+    void unloadElement(Element& element);
+}
+
+ElementUI::ElementUI(Mesh2D mesh, Transform transform, const char* texturepath) : Element(std::move(mesh), texturepath),
+transform(transform) {
+    Core::bakeVertices(this->mesh, transform);
+}
 
 Element::~Element() {
-    if (loaded) Core::unloadElement(*this);
-    if (ownsMesh) delete mesh;
+    Core::unloadElement(*this);
 }
 
-ElementUI::ElementUI(Mesh2D* mesh, Transform transform, const char* texturepath)
-    : Element(mesh, texturepath), transform(transform) {
+Batch::Batch(std::vector<ElementUI*> elements) {
 
-    // TODO move out of the constructor / constructor still calls bake
-    Mesh2D* baked = new Mesh2D(*mesh);
+    // Count and reserve
+    size_t totalVertices = 0;
+    size_t totalIndices = 0;
 
-    float cosR = bx::cos(transform.rotation);
-    float sinR = bx::sin(transform.rotation);
-
-    for (auto& v : baked->vertices) {
-        float x = v.vertex.x * transform.scale.x;
-        float y = v.vertex.y * transform.scale.y;
-        float rx = x * cosR - y * sinR;
-        float ry = x * sinR + y * cosR;
-        v.vertex.x = rx + transform.position.x;
-        v.vertex.y = ry + transform.position.y;
+    for (auto* e : elements) {
+        totalVertices += e->mesh.vertices.size();
+        totalIndices += e->mesh.indices.size();
     }
 
-    this->mesh = baked;
-    this->ownsMesh = true;
-}
+    finalelement.mesh.vertices.reserve(totalVertices);
+    finalelement.mesh.indices.reserve(totalIndices);
 
-Batch::Batch(std::vector<ElementUI*> elements) : elements(elements) {
-    // TODO
-    // I want to use those texture altas functions to create a png
-    // bake the final element's mesh into the uv's and combine all the meshes 
-    // its a big task ik but im struggling
+
+    TextureAtlas atlas;
+
+    std::vector<const char*> atlasTextures;
+    std::unordered_map<std::string, uint32_t> textureRegions;
+
+    for (auto* e : elements)
+    {
+        std::string path = e->texturepath;
+
+        if (!textureRegions.contains(path))
+        {
+            textureRegions[path] = atlasTextures.size();
+            atlasTextures.push_back(e->texturepath);
+        }
+    }
+
+    atlas = Core::generateAtlasImageData(atlasTextures);
+
+    uint16_t vertexOffset = 0;
+
+    for (auto* e : elements)
+    {
+        Mesh2D mesh = e->mesh;
+
+        uint32_t regionIndex =
+            textureRegions[e->texturepath];
+
+        Core::remapUVs(mesh, atlas.regions[regionIndex]);
+
+        finalelement.mesh.vertices.insert(
+            finalelement.mesh.vertices.end(),
+            mesh.vertices.begin(),
+            mesh.vertices.end()
+        );
+
+        for (uint16_t idx : mesh.indices)
+        {
+            finalelement.mesh.indices.push_back(
+                idx + vertexOffset
+            );
+        }
+
+        vertexOffset += static_cast<uint16_t>(
+            mesh.vertices.size()
+            );
+    }
+
+    Core::saveAtlasPNG(atlas, QUADLIB_ROOT "/assets/generated_atlas.png");
+
+    finalelement.texturepath = QUADLIB_ROOT "/assets/generated_atlas.png";
 }

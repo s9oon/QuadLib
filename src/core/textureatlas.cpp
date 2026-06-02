@@ -196,6 +196,16 @@ namespace Core {
         return atlas;
     }
 
+    void remapUVs(Mesh2D& mesh, const AtlasData& data) {
+        float du = data.u1 - data.u0;
+        float dv = data.v1 - data.v0;
+
+        for (auto& vertex : mesh.vertices) {
+            vertex.uv.x = data.u0 + vertex.uv.x * du;
+            vertex.uv.y = data.v0 + vertex.uv.y * dv;
+        }
+    }
+
     bool saveAtlasPNG(
         const TextureAtlas& atlas,
         const char* path

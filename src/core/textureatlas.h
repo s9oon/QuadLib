@@ -1,7 +1,7 @@
 #pragma once
 
 #include "texture.h"
-#include "core.h"
+#include "../common/types.h"
 
 #include <unordered_map>
 #include <vector>
@@ -20,11 +20,15 @@ struct TextureAtlas : ImageData {
 };
 
 namespace Core {
+    inline constexpr int atlasWidth = 2048;
+    inline constexpr int atlasHeight = 2048;
     stbrp_rect getRect(const char* path, int id);
 
     std::unordered_map<int, AtlasData> packRects(std::vector<stbrp_rect>& rects);
 
     TextureAtlas generateAtlasImageData(const std::vector<const char*>& paths);
+
+    void remapUVs(Mesh2D& mesh, const AtlasData& data);
 
     bool saveAtlasPNG(const TextureAtlas& atlas, const char* path);
 }

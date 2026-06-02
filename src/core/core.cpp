@@ -25,6 +25,20 @@ namespace Core {
             .end();
     }
 
+    void bakeVertices(Mesh2D& mesh, Transform transform) {
+        float cosR = bx::cos(transform.rotation);
+        float sinR = bx::sin(transform.rotation);
+
+        for (auto& v : mesh.vertices) {
+            float x = v.vertex.x * transform.scale.x;
+            float y = v.vertex.y * transform.scale.y;
+            float rx = x * cosR - y * sinR;
+            float ry = x * sinR + y * cosR;
+            v.vertex.x = rx + transform.position.x;
+            v.vertex.y = ry + transform.position.y;
+        }
+    }
+
     // simple init function
     void init() {
         initVertexLayout();
@@ -33,16 +47,15 @@ namespace Core {
 
     void loadElement(Element& element) {
         if (element.loaded) return;
-        if (!element.mesh) return;
 
-        element.gpuMesh = new GPUMesh2D(Core::loadMesh(*element.mesh));
+        element.gpuMesh = new GPUMesh2D(Core::loadMesh(element.mesh));
 
         if (element.texturepath)
             element.texture = new Texture(Core::loadTexture(element.texturepath));
 
         element.loaded = true;
     }
-
+    
     void unloadElement(Element& element) {
         delete element.gpuMesh;
         delete element.texture;

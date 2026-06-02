@@ -28,6 +28,8 @@ struct Mesh2D {
 	std::vector<Vertex2D> vertices;
 	std::vector<uint16_t> indices;
 
+    Mesh2D() = default;
+
 	Mesh2D(std::vector<Vertex2D> vertices, std::vector<uint16_t> indices) : 
 		vertices(vertices), indices(indices) {};
 };
@@ -37,17 +39,19 @@ struct Texture;
 
 class Element {
 public:
-    Mesh2D* mesh;
+    Mesh2D mesh;
     const char* texturepath;
 
     bool loaded = false;
-    bool ownsMesh = false;
 
     GPUMesh2D* gpuMesh = nullptr;
     Texture* texture = nullptr;
 
-    Element() : mesh(nullptr), texturepath(nullptr) {}
-    Element(Mesh2D* mesh, const char* texturepath) : mesh(mesh), texturepath(texturepath) {};
+    Element() = default;
+
+    Element(Mesh2D mesh, const char* texturepath)
+        : mesh(std::move(mesh)), texturepath(texturepath) {
+    }
 
     ~Element();
 };
@@ -56,17 +60,16 @@ class ElementWorld : public Element {
 public:
     Transform transform;
 
-    ElementWorld(Mesh2D* mesh, Transform transform, const char* texturepath) :
-        Element(mesh, texturepath), transform(transform) {
-    };
+    ElementWorld(Mesh2D mesh, Transform transform, const char* texturepath)
+        : Element(std::move(mesh), texturepath),
+        transform(transform) {}
 };
 
 class ElementUI : public Element {
 public:
-    ElementUI(Mesh2D* mesh, Transform transform, const char* texturepath);
-
-private:
     Transform transform;
+
+    ElementUI(Mesh2D mesh, Transform transform, const char* texturepath);
 };
 
 class Batch {

@@ -13,12 +13,11 @@ namespace Core {
 	extern float ortho[16];
 	extern int window_width;
 	extern int window_height;
-	inline constexpr int atlasWidth = 2048;
-	inline constexpr int atlasHeight = 2048;
 
 	void init();
 	void shutdown();
 
+	void bakeVertices(Mesh2D& mesh, Transform transform);
 	void initVertexLayout();
 	void loadElement(Element& element);
 	void unloadElement(Element& element);

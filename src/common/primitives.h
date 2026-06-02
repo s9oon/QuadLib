@@ -4,7 +4,7 @@
 namespace QuadLib {
     inline Mesh2D getQuad() {
         return Mesh2D(
-            {
+            {         //Pos            // UV's
                 { {-0.5f,  0.5f}, {0.0f, 0.0f} },
                 { { 0.5f,  0.5f}, {1.0f, 0.0f} },
                 { { 0.5f, -0.5f}, {1.0f, 1.0f} },
