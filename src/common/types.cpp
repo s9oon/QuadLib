@@ -1,5 +1,6 @@
 #include "types.h"
 #include "../core/core.h"
+#include "../core/texture.h"
 #include <bx/math.h>
 
 
@@ -29,9 +30,9 @@ ElementUI::ElementUI(Mesh2D* mesh, Transform transform, const char* texturepath)
     this->ownsMesh = true;
 }
 
-Batch::Batch(std::vector<ElementUI*> elements) : elements(elements) {
-    // TODO 
-    // create one big final ElementUI that created a texture atlas from the list and assigns the uv's correctly etc
-    // big task hope you understand
-    // if not well break it down
-}
+//Batch::Batch(std::vector<ElementUI*> elements) : elements(elements) {
+    // TODO
+    // I want to use those texture altas functions to create a png
+    // bake the final element's mesh into the uv's and combine all the meshes 
+    // its a big task ik but im struggling
+//}

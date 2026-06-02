@@ -73,9 +73,9 @@ private:
 
 class Batch {
 public:
-    ElementUI finalelement;
-
-    Batch(std::vector<ElementUI*> elements);
+    Element finalelement;
+    
+    //Batch(std::vector<ElementUI*> elements);
 
 private:
     std::vector<ElementUI*> elements;

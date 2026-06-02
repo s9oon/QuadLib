@@ -61,6 +61,7 @@ add_library(QuadLib
     src/core/mesh.cpp
     src/core/texture.cpp
     src/common/types.cpp
+    src/core/textureatlas.cpp
 )
 
 

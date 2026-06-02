@@ -4,6 +4,8 @@
 #include <bgfx/bgfx.h>
 #include <vector>
 #include "../common/types.h"
+#include "texture.h"
+#include "textureatlas.h"
 
 namespace Core {
 	extern uint16_t VIEW_MAIN;
@@ -11,6 +13,8 @@ namespace Core {
 	extern float ortho[16];
 	extern int window_width;
 	extern int window_height;
+	inline constexpr int atlasWidth = 2048;
+	inline constexpr int atlasHeight = 2048;
 
 	void init();
 	void shutdown();

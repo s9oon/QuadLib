@@ -1,5 +1,6 @@
 #include "api/quadlib.h"
 #include <iostream>
+#include <string>
 
 int main() {
 
@@ -26,22 +27,29 @@ int main() {
 		QUADLIB_ROOT "/assets/shaders/compiled/vs_basic.bin", QUADLIB_ROOT "/assets/shaders/compiled/fs_basic.bin"
 	);
 
-	TextureAtlas atlas;
-	atlas.width = 4096;
-	atlas.height = 4096;
+	std::vector<const char*> textures =
+	{
+		QUADLIB_ROOT "/assets/smallermoon.png",
+		QUADLIB_ROOT "/assets/smallermoon.png",
+		QUADLIB_ROOT "/assets/smallermoon.png",
+	};
 
-	Core::writeImage(
-		{
-			QUADLIB_ROOT "/assets/smallermoon.png",
-			QUADLIB_ROOT "/assets/smallermoon.png",
-			QUADLIB_ROOT "/assets/smallermoon.png"
-		}, QUADLIB_ROOT "/assets/atlas.png", atlas
+	TextureAtlas atlas = Core::generateAtlasImageData(textures);
+
+	Core::saveAtlasPNG(
+		atlas,
+		QUADLIB_ROOT "/assets/finalatlas.png"
 	);
+
+	const AtlasData& smallermoon2 = atlas.regions.at(2);
 
 	while (!QuadLib::windowShouldClose()) {
 		QuadLib::beginFrame(QuadLib::RGBA(255, 255, 0, 255));
 		QuadLib::drawElement(moon, basic);
 		QuadLib::endFrame();
 	}
+
+	delete[] atlas.data;
+
 	QuadLib::Shutdown();
 }
