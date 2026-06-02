@@ -46,9 +46,8 @@ public:
     GPUMesh2D* gpuMesh = nullptr;
     Texture* texture = nullptr;
 
-    Element(Mesh2D* mesh, const char* texturepath) :
-        mesh(mesh), texturepath(texturepath) {
-    };
+    Element() : mesh(nullptr), texturepath(nullptr) {}
+    Element(Mesh2D* mesh, const char* texturepath) : mesh(mesh), texturepath(texturepath) {};
 
     ~Element();
 };
@@ -64,7 +63,6 @@ public:
 
 class ElementUI : public Element {
 public:
-    ElementUI() : Element(nullptr, nullptr) {};
     ElementUI(Mesh2D* mesh, Transform transform, const char* texturepath);
 
 private:
@@ -75,7 +73,7 @@ class Batch {
 public:
     Element finalelement;
     
-    //Batch(std::vector<ElementUI*> elements);
+    Batch(std::vector<ElementUI*> elements);
 
 private:
     std::vector<ElementUI*> elements;

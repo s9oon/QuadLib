@@ -10,8 +10,9 @@ Element::~Element() {
 }
 
 ElementUI::ElementUI(Mesh2D* mesh, Transform transform, const char* texturepath)
-    : Element(nullptr, texturepath)
-{
+    : Element(mesh, texturepath), transform(transform) {
+
+    // TODO move out of the constructor / constructor still calls bake
     Mesh2D* baked = new Mesh2D(*mesh);
 
     float cosR = bx::cos(transform.rotation);
@@ -30,9 +31,9 @@ ElementUI::ElementUI(Mesh2D* mesh, Transform transform, const char* texturepath)
     this->ownsMesh = true;
 }
 
-//Batch::Batch(std::vector<ElementUI*> elements) : elements(elements) {
+Batch::Batch(std::vector<ElementUI*> elements) : elements(elements) {
     // TODO
     // I want to use those texture altas functions to create a png
     // bake the final element's mesh into the uv's and combine all the meshes 
     // its a big task ik but im struggling
-//}
+}

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 
-void printAtlasData(const AtlasData& data) {
+void static printAtlasData(const AtlasData& data) {
 	std::cout << "id: " << data.id << std::endl;
 	std::cout << "u0: " << data.u0 << std::endl;
 	std::cout << "v0: " << data.v0 << std::endl;
@@ -10,7 +10,7 @@ void printAtlasData(const AtlasData& data) {
 	std::cout << "v1: " << data.v1 << std::endl;
 }
 
-void remapUVs(Mesh2D& mesh, const AtlasData& data) {
+void static remapUVs(Mesh2D& mesh, const AtlasData& data) {
 	float du = data.u1 - data.u0;
 	float dv = data.v1 - data.v0;
 
