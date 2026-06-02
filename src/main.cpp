@@ -37,6 +37,7 @@ int main() {
 	QuadLib::compileShader(vsshader);
 	*/
 
+	// create texture list 
 	std::vector<const char*> textures =
 	{
 		QUADLIB_ROOT "/assets/triangle2.png",
@@ -44,11 +45,19 @@ int main() {
 		QUADLIB_ROOT "/assets/square2.png",
 	};
 
+	// create a texture atlas with texture list
 	TextureAtlas atlas = Core::generateAtlasImageData(textures);
 
+	// create a file using the texture atlas
 	Core::saveAtlasPNG(atlas, QUADLIB_ROOT "/assets/finalatlas.png");
 
-	const AtlasData& smallermoon1 = atlas.regions.at(1);
+	int region;
+
+	std::cout << "select a region 1 - 3: ";
+
+	std::cin >> region;
+
+	const AtlasData& smallermoon1 = atlas.regions.at(region - 1);
 
 	Mesh2D quad = QuadLib::getQuad();
 
