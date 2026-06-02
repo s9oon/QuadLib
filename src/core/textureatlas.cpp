@@ -34,8 +34,7 @@ namespace Core {
         return rect;
     }
 
-    std::unordered_map<int, AtlasData>
-        packRects(std::vector<stbrp_rect>& rects)
+    std::unordered_map<int, AtlasData> packRects(std::vector<stbrp_rect>& rects)
     {
         stbrp_context context;
 
