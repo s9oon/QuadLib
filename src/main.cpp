@@ -20,10 +20,22 @@ int main() {
 
 	Mesh2D quad = QuadLib::getQuad();
 
-	ElementWorld moon = { &quad, QuadLib::getCenter(200.0f), QUADLIB_ROOT "/assets/basicmoon.png"};
+	ElementUI moon = { &quad, QuadLib::getCenter(200.0f), QUADLIB_ROOT "/assets/basicmoon.png"};
 
 	bgfx::ProgramHandle basic = Core::getProgram(
 		QUADLIB_ROOT "/assets/shaders/compiled/vs_basic.bin", QUADLIB_ROOT "/assets/shaders/compiled/fs_basic.bin"
+	);
+
+	TextureAtlas atlas;
+	atlas.width = 4096;
+	atlas.height = 4096;
+
+	Core::writeImage(
+		{
+			QUADLIB_ROOT "/assets/smallermoon.png",
+			QUADLIB_ROOT "/assets/smallermoon.png",
+			QUADLIB_ROOT "/assets/smallermoon.png"
+		}, QUADLIB_ROOT "/assets/atlas.png", atlas
 	);
 
 	while (!QuadLib::windowShouldClose()) {

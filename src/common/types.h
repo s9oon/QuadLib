@@ -64,13 +64,13 @@ public:
 
 class ElementUI : public Element {
 public:
-    Transform transform;
-
     ElementUI() : Element(nullptr, nullptr) {};
     ElementUI(Mesh2D* mesh, Transform transform, const char* texturepath);
+
+private:
+    Transform transform;
 };
 
-// new idea element ui contains a transform but the constructor prebakes them???
 class Batch {
 public:
     ElementUI finalelement;

@@ -2,6 +2,7 @@
 #include "../core/core.h"
 #include <bx/math.h>
 
+
 Element::~Element() {
     if (loaded) Core::unloadElement(*this);
     if (ownsMesh) delete mesh;
@@ -28,6 +29,9 @@ ElementUI::ElementUI(Mesh2D* mesh, Transform transform, const char* texturepath)
     this->ownsMesh = true;
 }
 
-Batch::Batch(std::vector<ElementUI*> elements) {
-    // TODO
+Batch::Batch(std::vector<ElementUI*> elements) : elements(elements) {
+    // TODO 
+    // create one big final ElementUI that created a texture atlas from the list and assigns the uv's correctly etc
+    // big task hope you understand
+    // if not well break it down
 }
